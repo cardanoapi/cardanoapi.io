@@ -1,0 +1,36 @@
+[
+  {
+    "id": "1",
+    "projectName": "Mempool Explorer",
+    "url": "https://mempool.cardanoapi.io/",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "Real-Time Transaction Status & Network Insights"
+  },
+  {
+    "id": "2",
+    "projectName": "Cardano Test Wallet",
+    "url": "",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes."
+  },
+  {
+    "id": "3",
+    "projectName": "Autonomous Project Testing",
+    "url": "https://agents.cardanoapi.io/",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": ""
+  },
+  {
+    "id": "4",
+    "projectName": "Autonomous Agents",
+    "url": "/ethereum.jpg",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "Cardano network testing using autonomous agents"
+  },
+  {
+    "projectName": "Cardano Test Wallet",
+    "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes"
+  }
+]
