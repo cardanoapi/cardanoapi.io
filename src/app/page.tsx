@@ -8,6 +8,7 @@ export default function Home() {
         {data.map((project) => (
           <Card
             key={project.id}
+            id={project.id}
             projectName={project.projectName}
             url={project.url}
             imageUrl={project.imageUrl}

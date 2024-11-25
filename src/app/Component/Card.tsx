@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface CardProps {
+  id: string;
   projectName: string;
   imageUrl: string;
   url: string;
@@ -10,14 +11,14 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({
+  id,
   projectName,
   imageUrl,
-  url,
   description,
 }) => {
   return (
     <div className="size-80 rounded-lg overflow-hidden py-3 hover:text-[#1A80E5]">
-      <Link href={url}>
+      <Link href={`/projects/${id}`}>
         <Image
           className=" size-4/6  w-full rounded-lg"
           src={imageUrl}
