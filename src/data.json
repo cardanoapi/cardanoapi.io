@@ -4,33 +4,71 @@
     "projectName": "Mempool Explorer",
     "url": "https://mempool.cardanoapi.io/",
     "imageUrl": "/images/ethereum.jpg",
-    "description": "Real-Time Transaction Status & Network Insights"
+    "description": "Real-Time Transaction Status & Network Insights",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "2",
     "projectName": "Cardano Test Wallet",
     "url": "",
     "imageUrl": "/images/ethereum.jpg",
-    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes."
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes.",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "3",
     "projectName": "Autonomous Project Testing",
     "url": "https://agents.cardanoapi.io/",
     "imageUrl": "/images/ethereum.jpg",
-    "description": ""
+    "description": "",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "4",
     "projectName": "Autonomous Agents",
     "url": "/ethereum.jpg",
     "imageUrl": "/images/ethereum.jpg",
-    "description": "Cardano network testing using autonomous agents"
+    "description": "Cardano network testing using autonomous agents",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
+    "id": "5",
     "projectName": "Cardano Test Wallet",
     "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
     "imageUrl": "/images/ethereum.jpg",
-    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes"
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
+  },
+  {
+    "id": "6",
+    "projectName": "Cardano Test Wallet",
+    "url": "",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes.",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
+  },
+  {
+    "id": "7",
+    "projectName": "Autonomous Project Testing",
+    "url": "https://agents.cardanoapi.io/",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
+  },
+  {
+    "id": "8",
+    "projectName": "Autonomous Agents",
+    "url": "/ethereum.jpg",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "Cardano network testing using autonomous agents",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
+  },
+  {
+    "id": "9",
+    "projectName": "Cardano Test Wallet",
+    "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
+    "imageUrl": "/images/ethereum.jpg",
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes",
+    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   }
 ]
