@@ -35,7 +35,7 @@ export const Card: React.FC<CardProps> = ({
               height={50}
               alt={`${projectName} logo`}
             />
-            <div className="font-bold mb-2 ">{projectName}</div>
+            <h1 className="font-bold mb-2 ">{projectName}</h1>
           </div>
           <p className="text-base py-2  ">{description}</p>
         </div>

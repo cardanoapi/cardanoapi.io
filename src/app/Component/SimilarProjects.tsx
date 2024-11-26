@@ -13,6 +13,7 @@ export default function SimilarProjects({
         // Filter out the current project by checking the id
         data
           .filter((project) => project.id !== currentProjectId)
+          .slice(0, 4)
           .map((project) => (
             <div key={project.id} className="flex p-3">
               <div className="max-w-2/6 h-full">
