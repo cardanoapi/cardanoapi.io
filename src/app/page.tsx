@@ -21,8 +21,8 @@ export default function Home() {
   };
 
   return (
-    <div className="sm:px-44 py-16 flex flex-col min-h-screen">
-      <div className="flex-grow flex flex-wrap justify-around sm:justify-between">
+    <div className="sm:px-44  py-4 sm:py-8 flex flex-col min-h-screen">
+      <div className="flex-grow flex flex-wrap justify-around sm:justify-center sm:gap-x-20">
         {currentCards.map((project) => (
           <Card
             key={project.id}

@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="border-b-2 border-gray-300 py-7">
+        <div className="border-b-2 border-gray-300 py-4">
           <h1 className="flex font-bold justify-center ">
             Cardanoapi Projects
           </h1>

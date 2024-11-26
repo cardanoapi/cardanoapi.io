@@ -17,22 +17,25 @@ export const Card: React.FC<CardProps> = ({
   description,
 }) => {
   return (
-    <div className="size-80 rounded-lg overflow-hidden py-3 hover:text-[#1A80E5]">
+    <div
+      data-testid="cardElement"
+      className="max-w-64  rounded-2xl flex overflow-hidden py-1 hover:text-[#1A80E5]"
+    >
       <Link href={`/projects/${id}`}>
         <Image
-          className=" size-4/6  w-full rounded-lg"
+          className=" rounded-2xl flex sm:max-h-5/6 min-h-64 object-cover"
           src={imageUrl}
-          width={350}
-          height={400}
+          width={400}
+          height={450}
           alt={`${projectName} thumbnail`}
         />
-        <div className="py-4 ">
+        <div className="py-2 flex-1">
           <div className="flex gap-3">
             <Image
               className="size-9"
               src={imageUrl}
               width={50}
-              height={50}
+              height={60}
               alt={`${projectName} logo`}
             />
             <h1 className="font-bold mb-2 ">{projectName}</h1>
