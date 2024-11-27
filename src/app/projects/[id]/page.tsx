@@ -1,38 +1,43 @@
 import Image from "next/image";
 import data from "../../../data.json";
 import SimilarProjects from "@/app/Component/SimilarProjects";
+import Link from "next/link";
 
 export default async function Project({ params }: { params: { id: string } }) {
   const { id } = await params;
-
   const project = data.find((project) => project.id === id);
   return (
     <>
       <div className="flex-col w-9/12 m-auto overflow-x-hidden py-4">
+        <div className="hidden sm:block">Projects / {project?.projectName}</div>
         <div className="py-4 flex flex-col">
-          <div className="flex ">
+          <div className="flex h-24">
             <Image
-              className="sm:w-44 rounded-xl"
-              src="/images/ethereum.jpg"
+              className=" max-h-full rounded-xl sm-w:48 object-cover"
+              src={project.subImageUrl}
               alt="Project Thumbnail"
               width={80}
               height={80}
             ></Image>
-            <div className="flex flex-col w-full px-4 gap-2">
+            <div className="flex flex-col w-full max-h-full px-4 gap-2">
               <h1 className="font-semibold text-base">
                 {project?.projectName}
               </h1>
               <p className="w-full font-normal text-xs">
                 {project?.description}
               </p>
-              <button className=" hidden sm:block justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-1/6 py-1 border-2 border-[#1A80E5]">
-                Visit
-              </button>
+              <Link href={project?.url} target="_blank">
+                <button className=" hidden sm:block justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-1/6 py-1 border-2 border-[#1A80E5]">
+                  Visit
+                </button>
+              </Link>
             </div>
           </div>
-          <button className="sm:hidden justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-full py-1 my-4 border-2 border-[#1A80E5]">
-            Visit
-          </button>
+          <Link href={project?.url} target="_blank">
+            <button className="sm:hidden justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-full py-1 my-4 border-2 border-[#1A80E5]">
+              Visit
+            </button>
+          </Link>
           <div className="flex flex-col py-6 gap-12">
             <div className="flex gap-4 w-full ">
               <div className="hidden xl:block flex-col rounded-lg border border-neutral-500 w-3/12 p-4 space-y-2">
