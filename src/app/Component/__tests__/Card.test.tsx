@@ -9,6 +9,7 @@ describe("Project Card Test", () => {
         id={"1"}
         projectName="ABC"
         imageUrl="/imageURL"
+        subImageUrl="/images/subImageUrl"
         description="description"
         url="url"
       />
@@ -24,6 +25,7 @@ describe("Project Card Test", () => {
         projectName="ABC"
         imageUrl="/imageURL"
         description="description"
+        subImageUrl="/subImageURL"
         url="url"
       />
     );
@@ -38,6 +40,7 @@ describe("Project Card Test", () => {
         id={"1"}
         projectName="ABC"
         imageUrl="/imageURL"
+        subImageUrl="/subImageUrl"
         description="description"
         url="url"
       />
@@ -52,6 +55,7 @@ describe("Project Card Test", () => {
         id="1"
         projectName="ABC"
         imageUrl="/imageURL"
+        subImageUrl="/subImageURL"
         description="This is a description"
         url="url"
       />
@@ -66,7 +70,7 @@ describe("Project Card Test", () => {
     fireEvent.mouseEnter(cardElement);
 
     expect(cardElement).toHaveClass(
-      "max-w-80 rounded-lg flex overflow-hidden py-3 hover:text-[#1A80E5]"
+      "w-80 sm:max-w-72 rounded-2xl flex overflow-hidden py-1 hover:text-[#1A80E5]"
     );
   });
 });

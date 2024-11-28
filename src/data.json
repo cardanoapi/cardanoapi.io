@@ -1,66 +1,74 @@
 [
   {
     "id": "1",
-    "projectName": "Mempool Explorer",
-    "url": "https://mempool.cardanoapi.io/",
-    "imageUrl": "/images/ethereum.jpg",
-    "description": "Real-Time Transaction Status & Network Insights",
+    "projectName": "Split Contract",
+    "url": "https://paymentsplitter.cardanoapi.io/",
+    "imageUrl": "/images/splitContractC.jpg",
+    "subImageUrl": "/images/paymentsplitter.png",
+    "description": "Explore and experience the benefits of clarity and fairness",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "2",
-    "projectName": "Cardano Test Wallet",
-    "url": "",
-    "imageUrl": "/images/ethereum.jpg",
-    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes.",
+    "projectName": "Mempool",
+    "url": "https://mempool.cardanoapi.io/",
+    "imageUrl": "/images/mempoolC.jpg",
+    "subImageUrl": "/images/Mempool.png",
+    "description": "A complete set of tools for building decentralized applications",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "3",
-    "projectName": "Autonomous Project Testing",
-    "url": "https://agents.cardanoapi.io/",
-    "imageUrl": "/images/ethereum.jpg",
-    "description": "",
+    "projectName": "Kuber IDE",
+    "url": "https://kuberide.com/",
+    "imageUrl": "/images/KuberC.jpg",
+    "subImageUrl": "/images/KuberIDE.png",
+    "description": "Pro setup environment for writing and trying out plutus contracts and cardano transactions",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "4",
-    "projectName": "Autonomous Agents",
-    "url": "/ethereum.jpg",
-    "imageUrl": "/images/ethereum.jpg",
-    "description": "Cardano network testing using autonomous agents",
+    "projectName": "Cardano Test Wallet",
+    "url": "https://agents.cardanoapi.io/",
+    "imageUrl": "/images/cardanotestingwallet.jpg",
+    "subImageUrl": "/images/cardanotestingwallet.jpg",
+    "description": "Secure and easy to use wallet for managing cryptocurrency assets.",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "5",
-    "projectName": "Cardano Test Wallet",
-    "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
-    "imageUrl": "/images/ethereum.jpg",
-    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes",
+    "projectName": "Autonomous Agents",
+    "url": "https://agents.cardanoapi.io/",
+    "imageUrl": "/images/autonomousagentC.jpg",
+    "subImageUrl": "/images/autonomousagent.png",
+    "description": "A complete set of tools for building decentralized applications",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "6",
-    "projectName": "Cardano Test Wallet",
-    "url": "",
+    "projectName": "Binance",
+    "url": "https://agents.cardanoapi.io/",
     "imageUrl": "/images/ethereum.jpg",
-    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes.",
+    "subImageUrl": "/images/ethereum.jpg",
+    "description": "Tools for trading online currency hassle free",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
     "id": "7",
-    "projectName": "Autonomous Project Testing",
+    "projectName": "Blockchain Platform suite",
     "url": "https://agents.cardanoapi.io/",
     "imageUrl": "/images/ethereum.jpg",
+    "subImageUrl": "/images/ethereum.jpg",
     "description": "",
-    "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
+    "about": "A complete set of tools for building decentralized applications"
   },
   {
     "id": "8",
     "projectName": "Autonomous Agents",
-    "url": "/ethereum.jpg",
+    "url": "https://agents.cardanoapi.io/",
     "imageUrl": "/images/ethereum.jpg",
-    "description": "Cardano network testing using autonomous agents",
+    "subImageUrl": "/images/ethereum.jpg",
+    "description": "A complete set of tools for building decentralized applications",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   },
   {
@@ -68,6 +76,7 @@
     "projectName": "Cardano Test Wallet",
     "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
     "imageUrl": "/images/ethereum.jpg",
+    "subImageUrl": "/images/ethereum.jpg",
     "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   }
