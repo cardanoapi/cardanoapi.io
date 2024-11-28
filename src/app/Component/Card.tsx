@@ -6,6 +6,7 @@ interface CardProps {
   id: string;
   projectName: string;
   imageUrl: string;
+  subImageUrl: string;
   url: string;
   description: string;
 }
@@ -14,26 +15,27 @@ export const Card: React.FC<CardProps> = ({
   id,
   projectName,
   imageUrl,
+  subImageUrl,
   description,
 }) => {
   return (
     <div
       data-testid="cardElement"
-      className="max-w-64  rounded-2xl flex overflow-hidden py-1 hover:text-[#1A80E5]"
+      className="w-80 sm:max-w-72  rounded-2xl flex overflow-hidden py-1 hover:text-[#1A80E5]"
     >
       <Link href={`/projects/${id}`}>
         <Image
-          className=" rounded-2xl flex sm:max-h-5/6 min-h-64 object-cover"
+          className="rounded-2xl w-full flex h-72 sm:min-h-64 object-cover"
           src={imageUrl}
           width={400}
           height={450}
           alt={`${projectName} thumbnail`}
         />
-        <div className="py-2 flex-1">
+        <div className="py-6">
           <div className="flex gap-3">
             <Image
               className="size-9"
-              src={imageUrl}
+              src={subImageUrl}
               width={50}
               height={60}
               alt={`${projectName} logo`}

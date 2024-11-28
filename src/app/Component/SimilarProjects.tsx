@@ -15,17 +15,20 @@ export default function SimilarProjects({
           .filter((project) => project.id !== currentProjectId)
           .slice(0, 4)
           .map((project) => (
-            <div key={project.id} className="flex py-3 items-center gap-2">
-              <div className="min-w-2/6 h-full">
+            <div
+              key={project.id}
+              className="flex py-3 w-60 items-center gap-2 h-24"
+            >
+              <div className="w-3/6 h-full">
                 <Image
-                  className="rounded-xl"
-                  src="/images/ethereum.jpg"
+                  className="rounded-xl object-cover h-full"
+                  src={project.imageUrl}
                   alt={project.projectName}
                   width={100}
                   height={100}
                 />
               </div>
-              <div className="max-w-4/6 max-h-full">
+              <div className="w-4/6 max-h-full">
                 <h2>{project.projectName}</h2>
                 <p>Vice Studio</p>
               </div>

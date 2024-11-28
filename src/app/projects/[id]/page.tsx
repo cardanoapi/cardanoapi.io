@@ -14,10 +14,10 @@ export default async function Project({ params }: { params: { id: string } }) {
           <div className="flex h-24">
             <Image
               className=" max-h-full rounded-xl sm-w:48 object-cover"
-              src={project.subImageUrl}
+              src={project?.subImageUrl}
               alt="Project Thumbnail"
-              width={80}
-              height={80}
+              width={100}
+              height={100}
             ></Image>
             <div className="flex flex-col w-full max-h-full px-4 gap-2">
               <h1 className="font-semibold text-base">

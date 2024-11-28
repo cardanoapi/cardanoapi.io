@@ -30,6 +30,7 @@ export default function Home() {
             projectName={project.projectName}
             url={project.url}
             imageUrl={project.imageUrl}
+            subImageUrl={project.subImageUrl}
             description={project.description}
           />
         ))}
