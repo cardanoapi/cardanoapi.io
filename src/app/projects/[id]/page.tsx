@@ -14,10 +14,10 @@ export default async function Project({ params }: { params: { id: string } }) {
           {project?.projectName}
         </div>
         <div className="py-4 flex flex-col">
-          <div className="flex h-24 sm:h-28">
+          <div className="flex h-24 sm:h-32">
             <Image
-              className=" max-h-full rounded-xl sm:size-44 sm:border border-gray-200 object-contain"
-              src={project?.subImageUrl}
+              className=" max-h-full rounded-xl sm:size-56 sm:border border-gray-200 object-contain"
+              src={project?.subImageUrl || ""}
               alt="Project Thumbnail"
               width={100}
               height={100}
@@ -26,17 +26,17 @@ export default async function Project({ params }: { params: { id: string } }) {
               <h1 className="font-bold text-base sm:text-2xl">
                 {project?.projectName}
               </h1>
-              <p className="w-full font-normal text-xs text-[#6D7D8B]">
+              <p className="w-full font-normal text-sm text-[#6D7D8B]">
                 {project?.description}
               </p>
-              <Link href={project?.url} target="_blank">
+              <Link href={project?.url || ""} target="_blank">
                 <button className=" hidden sm:block justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-1/6 py-1 border-2 border-[#1A80E5]">
                   Visit
                 </button>
               </Link>
             </div>
           </div>
-          <Link href={project.url} target="_blank">
+          <Link href={project?.url || ""} target="_blank">
             <button className="sm:hidden justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-full py-1 my-4 border-2 border-[#1A80E5]">
               Visit
             </button>
@@ -60,14 +60,14 @@ export default async function Project({ params }: { params: { id: string } }) {
               {/* Image Section */}
               <div className="flex gap-4 overflow-x-auto lg:w-8/12 size-full justify-start">
                 <Image
-                  className="rounded-lg w-auto sm:w-1/2 sm:object-cover"
+                  className="rounded-xl w-auto sm:w-1/2 sm:object-cover"
                   src="/images/screenshot1.png"
                   alt="Screenshot"
                   width={400}
                   height={200}
                 ></Image>
                 <Image
-                  className="rounded w-auto sm:w-1/2 sm:object-cover"
+                  className="rounded-xl w-auto sm:w-1/2 sm:object-cover"
                   src="/images/screenshot1.png"
                   alt="Screenshot"
                   width={400}
