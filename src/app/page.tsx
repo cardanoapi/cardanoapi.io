@@ -66,7 +66,9 @@ export default function Home() {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 mx-2 border rounded-full bg-[#D9D9D9]"
+          className={`px-4 py-2 mx-2 border rounded-full bg-[#D9D9D9] ${
+            currentPage === totalPages ? "text-[#6D7D88]" : ""
+          }`}
         >
           Next
         </button>

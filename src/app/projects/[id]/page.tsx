@@ -9,21 +9,24 @@ export default async function Project({ params }: { params: { id: string } }) {
   return (
     <>
       <div className="flex-col w-9/12 m-auto overflow-x-hidden py-4">
-        <div className="hidden sm:block">Projects / {project?.projectName}</div>
+        <div className="hidden sm:block">
+          <span className="text-[#1A80E5]">Projects</span> /{" "}
+          {project?.projectName}
+        </div>
         <div className="py-4 flex flex-col">
-          <div className="flex h-24">
+          <div className="flex h-24 sm:h-28">
             <Image
-              className=" max-h-full rounded-xl sm-w:48 object-cover"
-              src={project.subImageUrl}
+              className=" max-h-full rounded-xl sm:size-44 sm:border border-gray-200 object-contain"
+              src={project?.subImageUrl}
               alt="Project Thumbnail"
-              width={80}
-              height={80}
+              width={100}
+              height={100}
             ></Image>
             <div className="flex flex-col w-full max-h-full px-4 gap-2">
-              <h1 className="font-semibold text-base">
+              <h1 className="font-bold text-base sm:text-2xl">
                 {project?.projectName}
               </h1>
-              <p className="w-full font-normal text-xs">
+              <p className="w-full font-normal text-xs text-[#6D7D8B]">
                 {project?.description}
               </p>
               <Link href={project?.url} target="_blank">
@@ -33,14 +36,14 @@ export default async function Project({ params }: { params: { id: string } }) {
               </Link>
             </div>
           </div>
-          <Link href={project?.url} target="_blank">
+          <Link href={project.url} target="_blank">
             <button className="sm:hidden justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-full py-1 my-4 border-2 border-[#1A80E5]">
               Visit
             </button>
           </Link>
-          <div className="flex flex-col py-6 gap-12">
-            <div className="flex gap-4 w-full ">
-              <div className="hidden xl:block flex-col rounded-lg border border-neutral-500 w-3/12 p-4 space-y-2">
+          <div className="flex flex-col py-6 gap-12 w-full">
+            <div className="flex gap-4 w-full h-40 sm:h-52">
+              <div className="hidden xl:block flex-col rounded-lg border border-neutral-500 w-4/12 p-4 space-y-2 py-8">
                 <h1 className="font-bold">
                   QuickStart <span className="text-[#1A80E5]">Plutus</span> and
                   <span className="text-[#1A80E5]"> Cardano </span>Development
@@ -55,27 +58,26 @@ export default async function Project({ params }: { params: { id: string } }) {
               </div>
 
               {/* Image Section */}
-              <div className="flex gap-4 overflow-x-auto h-2/6 min-w-9/12">
-                <img
-                  className="rounded-lg h-2/6 sm:w-auto"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMdgJXE2MbWrMAX_9HbjS3PaFiYK-FkqIctA&s"
+              <div className="flex gap-4 overflow-x-auto lg:w-8/12 size-full justify-start">
+                <Image
+                  className="rounded-lg w-auto sm:w-1/2 sm:object-cover"
+                  src="/images/screenshot1.png"
                   alt="Screenshot"
-                  width={200}
+                  width={400}
                   height={200}
-                />
-                <img
-                  className="rounded h-2/6 sm:w-auto"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMdgJXE2MbWrMAX_9HbjS3PaFiYK-FkqIctA&s"
+                ></Image>
+                <Image
+                  className="rounded w-auto sm:w-1/2 sm:object-cover"
+                  src="/images/screenshot1.png"
                   alt="Screenshot"
-                  width={200}
+                  width={400}
                   height={200}
-                />
+                ></Image>
               </div>
             </div>
-
             <div>
-              <h2 className="font-bold">About this app →</h2>
-              <p>
+              <h2 className="font-bold text-xl">About this app →</h2>
+              <p className="font-normal text-lg text-[#6D7D8B]">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
                 nobis cumque expedita necessitatibus consectetur accusantium
                 ullam explicabo non dolore voluptatem fasdlkfjsdaf
