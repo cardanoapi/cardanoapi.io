@@ -21,7 +21,7 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       data-testid="cardElement"
-      className="w-80 sm:max-w-72  rounded-2xl flex overflow-hidden py-1 hover:text-[#1A80E5] group"
+      className="max-w-64  rounded-2xl flex overflow-hidden py-1 hover:text-[#1A80E5]"
     >
       <Link href={`/projects/${id}`}>
         <Image
