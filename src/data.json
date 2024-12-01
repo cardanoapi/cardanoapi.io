@@ -21,7 +21,7 @@
     "id": "3",
     "projectName": "Kuber IDE",
     "url": "https://kuberide.com/",
-    "imageUrl": "/images/KuberC.jpg",
+    "imageUrl": "/images/kuberC.jpg",
     "subImageUrl": "/images/KuberIDE.png",
     "description": "Pro setup environment for writing and trying out plutus contracts and cardano transactions",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
@@ -39,7 +39,7 @@
     "id": "5",
     "projectName": "Autonomous Agents",
     "url": "https://agents.cardanoapi.io/",
-    "imageUrl": "/images/autonomousagentC.jpg",
+    "imageUrl": "/images/autonomousAgentC.jpg",
     "subImageUrl": "/images/autonomousagent.png",
     "description": "A complete set of tools for building decentralized applications",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."

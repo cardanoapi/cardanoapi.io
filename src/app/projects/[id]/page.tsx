@@ -1,11 +1,22 @@
+"use client";
 import Image from "next/image";
 import data from "../../../data.json";
 import SimilarProjects from "@/app/Component/SimilarProjects";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export default async function Project({ params }: { params: { id: string } }) {
-  const { id } = await params;
+export default function Project() {
+  let { id } = useParams();
   const project = data.find((project) => project.id === id);
+  if (Array.isArray(id)) {
+    id = id[0]; // Use the first element of the array if id is an array
+  }
+
+  if (!id) {
+    // Handle the case where id is undefined or invalid
+    return <div>Project not found!</div>;
+  }
+
   return (
     <>
       <div className="flex-col w-9/12 m-auto overflow-x-hidden py-4">
