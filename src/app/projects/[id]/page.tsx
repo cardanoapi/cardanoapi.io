@@ -6,12 +6,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 export function generateStaticParams() {
-  //Generate static paths for dunamic pages
-  const ids = data.map((project) => project.id);
-  return ids.map((id) => ({ id: String(id) }));
+  const ids = data.map((project) => project.id); // Extract all project IDs
+  return ids.map((id) => ({
+    params: { id: String(id) }, // Return `id` as a parameter for the route
+  }));
 }
 
 export default function Project() {
+  //generate static paths for dynamic pages
   let { id } = useParams();
   const project = data.find((project) => project.id === id);
   if (Array.isArray(id)) {
