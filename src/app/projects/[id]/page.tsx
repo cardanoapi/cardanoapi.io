@@ -5,6 +5,12 @@ import SimilarProjects from "@/app/Component/SimilarProjects";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
+export function generateStaticParams() {
+  //Generate static paths for dunamic pages
+  const ids = data.map((project) => project.id);
+  return ids.map((id) => ({ id: String(id) }));
+}
+
 export default function Project() {
   let { id } = useParams();
   const project = data.find((project) => project.id === id);
