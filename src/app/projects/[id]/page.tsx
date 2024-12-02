@@ -5,10 +5,9 @@ import SimilarProjects from "@/app/Component/SimilarProjects";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-
-export function generateStaticParams() {
-  return [{ slug: ["/"] }];
-}
+// export function generateStaticParams() {
+//   return [{ slug: ["/"] }];
+// }
 
 export default function Project() {
   //generate static paths for dynamic pages
