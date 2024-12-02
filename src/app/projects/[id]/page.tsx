@@ -5,6 +5,7 @@ import SimilarProjects from "@/app/Component/SimilarProjects";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
+
 export function generateStaticParams() {
   return [{ slug: ["/"] }];
 }
