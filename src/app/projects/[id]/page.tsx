@@ -1,17 +1,16 @@
-"use client";
 import Image from "next/image";
 import data from "../../../data.json";
 import SimilarProjects from "@/app/Component/SimilarProjects";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
-// export function generateStaticParams() {
-//   return [{ slug: ["/"] }];
-// }
-
-export default function Project() {
+export function generateStaticParams() {
+  return data.map((project) => ({
+    id: project.id.toString(),
+  }));
+}
+export default async function Project({ params }: { params: { id: string } }) {
   //generate static paths for dynamic pages
-  let { id } = useParams();
+  let { id } = await params;
   const project = data.find((project) => project.id === id);
   if (Array.isArray(id)) {
     id = id[0]; // Use the first element of the array if id is an array
