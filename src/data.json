@@ -73,7 +73,7 @@
   },
   {
     "id": "9",
-    "projectName": "Cardano Test Wallet",
+    "projectName": "Mock Test Wallet",
     "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
     "imageUrl": "/images/ethereum.jpg",
     "subImageUrl": "/images/ethereum.jpg",
