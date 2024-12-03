@@ -1,7 +1,7 @@
+version: "3"
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
+  nextjs:
+    image: saisab/cardanoapiio-app:latest
     ports:
-      - "3001:3000"
+      - "3000:3000"
+    restart: always
