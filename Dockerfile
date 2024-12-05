@@ -5,6 +5,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev --force
 
+# Install TypeScript types for React (required for TypeScript projects)
+RUN npm install --save-exact --save-dev @types/react
+
 # Build Stage: Build Application
 FROM node:20-alpine AS builder
 
