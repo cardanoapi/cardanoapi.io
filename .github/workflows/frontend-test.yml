@@ -23,7 +23,7 @@ jobs:
           node-version: "18" # Specify your project's Node.js version
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --force
 
       - name: Run tests
         run: npm test
