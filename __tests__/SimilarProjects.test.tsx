@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import SimilarProjects from "@/app/Component/SimilarProjects";
-import data from "../src/data.json";
 import "@testing-library/jest-dom";
 
 // Mock the data import
