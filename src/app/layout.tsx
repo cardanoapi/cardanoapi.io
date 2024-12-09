@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,9 +30,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="border-b-2 border-gray-300 py-4">
-          <h1 className="flex font-bold text-lg justify-center ">
+          <Link href="/" className="flex font-bold text-lg justify-center ">
             Cardanoapi Projects
-          </h1>
+          </Link>
         </div>
 
         {children}

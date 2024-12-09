@@ -27,8 +27,10 @@ export default function Project() {
     <>
       <div className="flex-col w-9/12 m-auto overflow-x-hidden py-4">
         <div className="hidden sm:block">
-          <span className="text-[#1A80E5]">Projects</span> /{" "}
-          {project?.projectName}
+          <Link href="/" className="text-[#1A80E5]">
+            Projects
+          </Link>{" "}
+          / {project?.projectName}
         </div>
         <div className="py-4 flex flex-col">
           <div className="flex h-24 sm:h-32">
