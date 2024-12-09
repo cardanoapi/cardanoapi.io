@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Card } from "@/app/Component/Card";
@@ -49,7 +52,10 @@ describe("Card Component", () => {
     );
     const mainImage = screen.getByAltText("Test Project thumbnail");
     expect(mainImage).toHaveAttribute("src");
-    expect(mainImage.getAttribute("src")).toContain("/path/to/image.jpg");
+    expect(mainImage).toHaveAttribute(
+      "src",
+      expect.stringContaining("/path/to/image.jpg")
+    );
   });
 
   test("renders sub-image correctly", () => {
@@ -66,7 +72,10 @@ describe("Card Component", () => {
 
     const subImage = screen.getByAltText("Test Project logo");
     expect(subImage).toHaveAttribute("src");
-    expect(subImage.getAttribute("src")).toContain("/path/to/logo.jpg");
+    expect(subImage).toHaveAttribute(
+      "src",
+      expect.stringContaining("/path/to/logo.jpg")
+    );
   });
 
   test("navigates to correct link", () => {
