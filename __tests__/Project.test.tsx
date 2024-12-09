@@ -1,10 +1,9 @@
 /* eslint-disable testing-library/no-node-access */
-/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { render, screen, fireEvent } from "@testing-library/react";
+/* eslint-disable jsx-a11y/alt-text */
+import { render, screen } from "@testing-library/react";
 import Project from "@/app/projects/[id]/page";
-import { useParams } from "next/navigation";
 import "@testing-library/jest-dom";
 
 jest.mock("next/image", () => ({
@@ -13,7 +12,7 @@ jest.mock("next/image", () => ({
     return <img {...props} />;
   },
 }));
-// Mocking the data.json import
+
 jest.mock("../src/data.json", () => [
   {
     id: "1",
@@ -31,76 +30,64 @@ jest.mock("../src/data.json", () => [
   },
 ]);
 
-// Mocking useParams hook to simulate dynamic routing
 jest.mock("next/navigation", () => ({
-  useParams: jest.fn(),
+  notFound: jest.fn(),
 }));
+jest.mock("../src/app/Component/SimilarProjects", () => {
+  return function MockSimilarProjects() {
+    return <div data-testid="similar-projects">Similar Projects</div>;
+  };
+});
 
 describe("Project Page", () => {
-  beforeEach(() => {
-    // TypeScript needs the correct type for the return value, so specify `id` as a string.
-    (useParams as jest.Mock).mockReturnValue({ id: "1" }); // Simulating that the ID from the URL is 1
-  });
-
-  it("renders the correct project based on the id from the URL", () => {
+  it("renders the correct project based on the id from the URL", async () => {
     const mockParams = Promise.resolve({ id: "1" });
-    render(<Project params={mockParams} />);
+    render(await Project({ params: mockParams }));
 
-    const projectName = screen.getByText("Project 1");
-    const projectDescription = screen.getByText("Description 1");
+    const projectName = await screen.findByText("Project 1");
+    const projectDescription = await screen.findByText("Description 1");
     expect(projectName).toBeInTheDocument();
     expect(projectDescription).toBeInTheDocument();
 
-    const image = screen.getByAltText("Project Thumbnail");
+    const image = await screen.findByAltText("Project Thumbnail");
     expect(image).toHaveAttribute("src", "/path/to/image1.jpg");
   });
 
-  it("renders the similar projects section with the correct current project id", () => {
+  it("renders the similar projects section", async () => {
     const mockParams = Promise.resolve({ id: "1" });
-    render(<Project params={mockParams} />);
+    render(await Project({ params: mockParams }));
 
-    // Test that the SimilarProjects component is rendered
-    const similarProject = screen.getByText("You may also like");
-    expect(similarProject).toBeInTheDocument();
+    const similarProjectsSection = await screen.findByText("You may also like");
+    expect(similarProjectsSection).toBeInTheDocument();
 
-    // Ensure SimilarProjects is rendered with the correct currentProjectId
-    const project1Card = screen.getByText("Project 1");
-    expect(project1Card).toBeInTheDocument();
+    const similarProjectsComponent = await screen.findByTestId(
+      "similar-projects"
+    );
+    expect(similarProjectsComponent).toBeInTheDocument();
   });
 
-  it("renders the Visit button and links correctly", () => {
+  it("renders the Visit button and links correctly", async () => {
     const mockParams = Promise.resolve({ id: "1" });
-    render(<Project params={mockParams} />);
+    render(await Project({ params: mockParams }));
 
-    // Target the Visit button for the screen size you're testing
-    const visitButton = screen.getAllByRole("button", { name: /visit/i });
+    const visitButtons = await screen.findAllByText("Visit");
+    expect(visitButtons.length).toBeGreaterThan(0);
 
-    expect(visitButton[1]).toBeInTheDocument();
-    fireEvent.click(visitButton[1]);
-
-    expect(visitButton[0]).toBeInTheDocument();
-    fireEvent.click(visitButton[0]);
-
-    // Ensure that the correct URL is opened. (You may want to adjust this to simulate a navigation or an external link click)
-    expect(visitButton[0].closest("a")).toHaveAttribute(
-      "href",
-      "http://example.com"
-    );
+    visitButtons.forEach((button) => {
+      const link = button.closest("a");
+      expect(link).toHaveAttribute("href", "http://example.com");
+      expect(link).toHaveAttribute("target", "_blank");
+    });
   });
 
-  it("displays the correct images for the project", () => {
+  it("displays the project screenshots", async () => {
     const mockParams = Promise.resolve({ id: "1" });
-    render(<Project params={mockParams} />);
+    render(await Project({ params: mockParams }));
 
-    // Check that the project image and screenshots are rendered correctly
-    const projectImage = screen.getByAltText("Project Thumbnail");
-    expect(projectImage).toHaveAttribute("src", "/path/to/image1.jpg");
-
-    const screenshotImages = screen.getAllByAltText("Screenshot");
-    expect(screenshotImages).toHaveLength(2); // We have two screenshot images in the mock project
-    expect(screenshotImages[0]).toHaveAttribute(
-      "src",
-      "/images/screenshot1.png"
-    );
+    const screenshotImages = await screen.findAllByAltText("Screenshot");
+    expect(screenshotImages).toHaveLength(2);
+    screenshotImages.forEach((img) => {
+      expect(img).toHaveAttribute("src", "/images/screenshot1.png");
+    });
   });
 });
