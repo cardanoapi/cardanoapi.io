@@ -1,3 +1,7 @@
+/* eslint-disable testing-library/no-node-access */
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent } from "@testing-library/react";
 import Project from "@/app/projects/[id]/page";
 import { useParams } from "next/navigation";
@@ -39,7 +43,8 @@ describe("Project Page", () => {
   });
 
   it("renders the correct project based on the id from the URL", () => {
-    render(<Project />);
+    const mockParams = Promise.resolve({ id: "1" });
+    render(<Project params={mockParams} />);
 
     const projectName = screen.getByText("Project 1");
     const projectDescription = screen.getByText("Description 1");
@@ -51,7 +56,8 @@ describe("Project Page", () => {
   });
 
   it("renders the similar projects section with the correct current project id", () => {
-    render(<Project />);
+    const mockParams = Promise.resolve({ id: "1" });
+    render(<Project params={mockParams} />);
 
     // Test that the SimilarProjects component is rendered
     const similarProject = screen.getByText("You may also like");
@@ -63,7 +69,8 @@ describe("Project Page", () => {
   });
 
   it("renders the Visit button and links correctly", () => {
-    render(<Project />);
+    const mockParams = Promise.resolve({ id: "1" });
+    render(<Project params={mockParams} />);
 
     // Target the Visit button for the screen size you're testing
     const visitButton = screen.getAllByRole("button", { name: /visit/i });
@@ -82,7 +89,8 @@ describe("Project Page", () => {
   });
 
   it("displays the correct images for the project", () => {
-    render(<Project />);
+    const mockParams = Promise.resolve({ id: "1" });
+    render(<Project params={mockParams} />);
 
     // Check that the project image and screenshots are rendered correctly
     const projectImage = screen.getByAltText("Project Thumbnail");
