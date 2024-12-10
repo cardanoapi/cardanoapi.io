@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 
 /* eslint-enable jsx-a11y/alt-text */
-import Image from "next/image";
+
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
@@ -11,6 +12,11 @@ export async function GET(request: Request) {
 
   const hasTitle = searchParams.has("title");
   const title = hasTitle ? searchParams.get("title") : "Cardano API";
+
+  const hasDescirption = searchParams.has("description");
+  const description = hasDescirption
+    ? searchParams.get("description")
+    : "A list of Cardano API project";
 
   // Fetch the Roboto font
   const fontData = await fetch(
@@ -39,7 +45,7 @@ export async function GET(request: Request) {
           backgroundColor: "#bcd7e5",
         }}
       >
-        <Image
+        <img
           src={imageBase64}
           alt="Cardano API"
           style={{
@@ -48,16 +54,23 @@ export async function GET(request: Request) {
             marginTop: "20px",
             borderRadius: "50%",
           }}
-        ></Image>
-        <div tw="flex flex-col px-4">
+        />
+        <div tw="flex flex-col px-4 m-w-1/2">
           <h1 style={{ fontSize: "48px", fontWeight: "bold", margin: "0" }}>
             {title}
           </h1>
 
           <p
-            style={{ fontSize: "24px", fontWeight: "bold", marginTop: "20px" }}
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              marginTop: "20px",
+              width: "100%",
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
+            }}
           >
-            Explore a list of Cardano API Projects
+            {description}
           </p>
         </div>
       </div>

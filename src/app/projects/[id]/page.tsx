@@ -1,5 +1,3 @@
-// app/projects/[id]/page.tsx
-
 import Image from "next/image";
 import data from "../../../data.json";
 import SimilarProjects from "@/app/Component/SimilarProjects";
@@ -9,6 +7,41 @@ import { notFound } from "next/navigation";
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: Props) {
+  const { id } = await params;
+  if (!id) {
+    return {};
+  }
+
+  const project = data.find((project) => project.id === id);
+
+  if (!project) {
+    return {};
+  }
+
+  const projectName = project.projectName || "Cardano API";
+  const projectDescription =
+    project.description || "A List of Cardano API Projects";
+
+  return {
+    title: projectName,
+    description: projectDescription,
+    openGraph: {
+      title: projectName,
+      description: projectDescription,
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(
+            projectName
+          )}&description=${encodeURIComponent(projectDescription)}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+  };
+}
 
 const ProjectPage = async ({ params }: Props) => {
   // Ensure `params` has an id
