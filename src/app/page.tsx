@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "A list of Cardano Api Projects",
     images: [
       {
-        url: "http://localhost:3000/api/og",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "Cardano Api",
