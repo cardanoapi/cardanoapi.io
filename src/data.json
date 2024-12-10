@@ -77,7 +77,7 @@
     "url": "https://www.npmjs.com/package/@cardanoapi/cardano-test-wallet",
     "imageUrl": "/images/ethereum.jpg",
     "subImageUrl": "/images/ethereum.jpg",
-    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes",
+    "description": "This JavaScript library injects a simulated Cardano wallet into your web application for testing purposes after GHCR",
     "about": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil amet officia assumenda ipsa magni quisquam quas, consectetur nostrum ducimus perspiciatis."
   }
 ]
