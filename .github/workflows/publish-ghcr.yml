@@ -14,5 +14,5 @@ jobs:
       - name: Build and push the image
         run: |
           docker login --username saisab29 --password ${{secrets.GH_PAT}} ghcr.io
-          docker build . --tag ghcr.io/saisab29/cardanoapi.io-ghcr:latest
-          docker push ghcr.io/saisab29/cardanoapi.io-ghcr:latest
+          docker build . --tag ghcr.io/cardanoapi/cardanoapi.io-ghcr:latest
+          docker push ghcr.io/cardanoapi/cardanoapi.io-ghcr:latest
