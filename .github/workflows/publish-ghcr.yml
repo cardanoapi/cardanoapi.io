@@ -1,4 +1,4 @@
-name: Docker Image CI for GHCR
+name: Build and Push Docker Image
 
 on:
   workflow_run:
@@ -7,12 +7,29 @@ on:
       - completed
 
 jobs:
-  Build_and_publish:
+  build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Build and push the image
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Log in to GHCR
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GITHUB_ACTOR }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and tag the Docker image
+      - name: Build Docker image
         run: |
-          docker login --username saisab29 --password ${{secrets.GH_PAT}} ghcr.io
-          docker build . --tag ghcr.io/cardanoapi/cardanoapi.io-ghcr:latest
-          docker push ghcr.io/cardanoapi/cardanoapi.io-ghcr:latest
+          docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest .
+
+      # Push the Docker image to GHCR
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
