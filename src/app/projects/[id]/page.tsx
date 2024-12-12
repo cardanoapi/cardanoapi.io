@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: projectName,
     description: projectDescription,
+    metadataBase: new URL('https://cardanoapi.io'),
     openGraph: {
       title: projectName,
       description: projectDescription,

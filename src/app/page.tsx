@@ -5,6 +5,7 @@ import Pagination from "./Component/Pagination"; // New client component
 export const metadata: Metadata = {
   title: "Cardano API",
   description: "A list of Cardano Api projects",
+  metadataBase: new URL("https://cardanoapi.io"),
   openGraph: {
     title: "Cardano Api",
     description: "A list of Cardano Api Projects",
