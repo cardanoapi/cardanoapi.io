@@ -2,20 +2,17 @@ name: Create and publish a Docker image to ghcr
 
 on:
   workflow_run:
-    workflows: ["Run Tests"] # This ensures this workflow runs after the test workflow
+    workflows: ["Run Tests"]
     types:
       - completed
 
-# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
       packages: write
@@ -26,31 +23,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch full history for versioning
+          fetch-depth: 0
 
-      # Generate a version number based on commits
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          # Get the latest tag, sorted by version
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "latest_tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+
       - name: Generate version
         id: version
         run: |
-          # Get the latest tag or use 0.0.0 if no tags exist
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          # Get the latest tag
+          LATEST_TAG=${{ steps.get_latest_tag.outputs.latest_tag }}
 
-          # Count commits since the latest tag
-          COMMIT_COUNT=$(git rev-list --count ${LATEST_TAG}..HEAD)
+          # Remove 'v' prefix and split version
+          VERSION_PARTS=($(echo "${LATEST_TAG#v}" | tr '.' ' '))
 
-          # Split the latest tag into major, minor, patch
-          IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
+          # Extract parts or default to 0
+          MAJOR=${VERSION_PARTS[0]:-0}
+          MINOR=${VERSION_PARTS[1]:-0}
+          PATCH=${VERSION_PARTS[2]:-0}
 
           # Increment patch version
           PATCH=$((PATCH + 1))
 
           # Construct new version
-          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}-${COMMIT_COUNT}"
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
 
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           echo "Generated version: ${NEW_VERSION}"
 
-      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages.
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -58,7 +62,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata for Docker image
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -68,7 +71,6 @@ jobs:
             type=raw,value=${{ steps.version.outputs.version }}
             type=raw,value=latest
 
-      # Build and push Docker image
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v5
@@ -77,22 +79,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # Optional: Add build arguments if needed
-          # build-args: |
-          #   VERSION=${{ steps.version.outputs.version }}
 
-      # Generate artifact attestation
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-
-      # Optional: Create a tag in the repository
-      - name: Create tag
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git tag ${{ steps.version.outputs.version }}
-          git push origin ${{ steps.version.outputs.version }}
