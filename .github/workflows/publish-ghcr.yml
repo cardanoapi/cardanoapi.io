@@ -25,32 +25,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get latest tag
-        id: get_latest_tag
-        run: |
-          # Get the latest tag, sorted by version
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          echo "latest_tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
-
-      - name: Generate version
-        id: version
+      - name: Get latest tag and commit distance
+        id: get_version_info
         run: |
           # Get the latest tag
-          LATEST_TAG=${{ steps.get_latest_tag.outputs.latest_tag }}
+          LATEST_TAG=$(git describe --tags --abbrev=0)
 
-          # Remove 'v' prefix and split version
-          VERSION_PARTS=($(echo "${LATEST_TAG#v}" | tr '.' ' '))
+          # Remove 'v' prefix from latest tag
+          BASE_VERSION=${LATEST_TAG#v}
 
-          # Extract parts or default to 0
-          MAJOR=${VERSION_PARTS[0]:-0}
-          MINOR=${VERSION_PARTS[1]:-0}
-          PATCH=${VERSION_PARTS[2]:-0}
+          # Get the number of commits since the last tag
+          COMMIT_DISTANCE=$(git rev-list --count ${LATEST_TAG}..HEAD)
 
-          # Increment patch version
-          PATCH=$((PATCH + 1))
-
-          # Construct new version
-          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          # Construct new version with build number
+          NEW_VERSION="v${BASE_VERSION}-build${COMMIT_DISTANCE}"
 
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           echo "Generated version: ${NEW_VERSION}"
@@ -68,7 +56,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=${{ steps.get_version_info.outputs.version }}
 
       - name: Build and push Docker image
         id: push
