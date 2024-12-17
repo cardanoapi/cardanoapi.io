@@ -38,7 +38,7 @@ jobs:
           COMMIT_DISTANCE=$(git rev-list --count ${LATEST_TAG}..HEAD)
 
           # Construct new version with build number
-          NEW_VERSION="v${BASE_VERSION}-build${COMMIT_DISTANCE}"
+          NEW_VERSION="v${BASE_VERSION}.${COMMIT_DISTANCE}"
 
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           echo "Generated version: ${NEW_VERSION}"
