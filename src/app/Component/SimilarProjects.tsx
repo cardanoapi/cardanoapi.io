@@ -1,13 +1,51 @@
 import Image from "next/image";
-import data from "../../data.json";
 import Link from "next/link";
 
 interface SimilarProjectsProps {
   currentProjectId: string; // or number, depending on the type of `id`
 }
-export default function SimilarProjects({
+
+interface Project {
+  id: string;
+  projectname: string;
+  projecturl: string;
+  imageurl: string;
+  subimageurl: string;
+  description: string;
+  about: string;
+  createdAt: string;
+  published: boolean;
+  updatedAt: string;
+}
+
+interface ApiResponse {
+  projects: Project[];
+  result: number;
+  status: string;
+}
+
+async function getProject(): Promise<Project[]> {
+  try {
+    const response = await fetch("http://localhost:8000/api/projects", {
+      cache: "no-cache",
+    });
+
+    if (!response.ok) {
+      throw Error("Failed to fetch projects!!");
+    }
+    const data: ApiResponse = await response.json();
+    return data.projects || [];
+  } catch (error) {
+    console.error("Error fetching projects: ", error);
+    return [];
+  }
+}
+
+export default async function SimilarProjects({
   currentProjectId,
 }: SimilarProjectsProps) {
+  const data = await getProject();
+  console.log(data, "data form pagination");
   return (
     <>
       {
@@ -24,14 +62,14 @@ export default function SimilarProjects({
               <div className="w-3/6 h-full">
                 <Image
                   className="rounded-xl object-cover h-full"
-                  src={project.imageUrl}
-                  alt={project.projectName}
+                  src={project.imageurl}
+                  alt={project.projectname}
                   width={100}
                   height={100}
                 />
               </div>
               <div className="w-4/6 max-h-full">
-                <h2 className="font-normal text-lg ">{project.projectName}</h2>
+                <h2 className="font-normal text-lg ">{project.projectname}</h2>
                 <p className="font-normal text-sm text-[#9D9D9D] group-hover:text-[#1A80E5]">
                   Vice Studio
                 </p>
