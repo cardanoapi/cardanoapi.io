@@ -26,7 +26,7 @@ interface ApiResponse {
 
 async function getProject(): Promise<Project[]> {
   try {
-    const response = await fetch("http://localhost:8000/api/projects", {
+    const response = await fetch(`${process.env.API_URL}/api/projects`, {
       cache: "no-cache",
     });
 

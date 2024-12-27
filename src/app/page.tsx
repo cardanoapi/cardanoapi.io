@@ -41,7 +41,7 @@ interface ApiResponse {
 
 async function getProjects(): Promise<Project[]> {
   try {
-    const response = await fetch("http://localhost:8000/api/projects", {
+    const response = await fetch(`${process.env.API_URL}/api/projects`, {
       cache: "no-store",
     });
 
@@ -52,7 +52,7 @@ async function getProjects(): Promise<Project[]> {
     const data: ApiResponse = await response.json();
     return data.projects || [];
   } catch (error) {
-    console.error("Error fetching projects: ", error);
+    console.error("Error fetching projects: ", error, process.env.API_URL);
     return [];
   }
 }
