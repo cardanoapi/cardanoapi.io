@@ -64,13 +64,13 @@ jobs:
           VERSION=${{ steps.get_version_info.outputs.version }}
           REPO=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-          # Build images with proper tags using the existing docker-compose.yml
-          docker compose -f docker-compose.yml build \
+          # Build images with proper tags using the existing docker-compose-dev.yml
+          docker compose -f docker-compose-dev.yml build \
             --build-arg VERSION=$VERSION \
             --build-arg REPO=$REPO
 
           # Get the service names from docker-compose
-          docker compose -f docker-compose.yml config --services
+          docker compose -f docker-compose-dev.yml config --services
 
           # Tag images
           docker tag cardanoapiio_backend:latest $REPO/backend:$VERSION
@@ -81,7 +81,7 @@ jobs:
           docker push $REPO/frontend:$VERSION
 
           # Create production docker-compose file
-          cat > docker-compose.prod.yml << EOL
+          cat > docker-compose-dev.prod.yml << EOL
           services:
             postgres:
               image: postgres:latest
@@ -143,7 +143,7 @@ jobs:
           touch .env
 
           # Package and push the stack
-          tar -czf stack.tar.gz docker-compose.prod.yml .env
+          tar -czf stack.tar.gz docker-compose-dev.prod.yml .env
 
           # Create and push the stack image
           docker buildx build --push \
