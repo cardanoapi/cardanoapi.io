@@ -1,0 +1,156 @@
+name: Create and publish Docker Compose stack to GHCR
+
+on:
+  push:
+    branches:
+      - backend
+  pull_request:
+    branches:
+      - backend
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-stack:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version info
+        id: get_version_info
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          BASE_VERSION=${LATEST_TAG#v}
+          COMMIT_DISTANCE=$(git rev-list --count ${LATEST_TAG}..HEAD)
+          NEW_VERSION="v${BASE_VERSION}.${COMMIT_DISTANCE}"
+          echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+          echo "Generated version: ${NEW_VERSION}"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.get_version_info.outputs.version }}
+
+      # Build and push the entire stack
+      - name: Build and push Docker Compose stack
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |
+          # Update the docker-compose.yml to use GHCR images
+          VERSION=${{ steps.get_version_info.outputs.version }}
+          REPO=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+          # Build images with proper tags
+          docker compose build \
+            --build-arg VERSION=$VERSION \
+            --build-arg REPO=$REPO
+
+          # Tag images
+          docker tag cardanoapiio_backend $REPO/backend:$VERSION
+          docker tag nextjs_frontend_prod $REPO/frontend:$VERSION
+
+          # Push images
+          docker push $REPO/backend:$VERSION
+          docker push $REPO/frontend:$VERSION
+
+          # Create and push a docker-compose.yml with updated image references
+          cat > docker-compose.prod.yml << EOL
+          services:
+            postgres:
+              image: postgres:latest
+              container_name: postgres_prod
+              ports:
+                - "6500:5432"
+              volumes:
+                - progresDB:/var/lib/postgresql/data
+              env_file:
+                - ./.env
+              networks:
+                - app_network_prod
+
+            pgAdmin:
+              image: dpage/pgadmin4
+              container_name: pgAdmin_prod
+              env_file:
+                - ./.env
+              ports:
+                - "5050:80"
+              networks:
+                - app_network_prod
+
+            backend:
+              image: $REPO/backend:$VERSION
+              container_name: cardanoapiio_backend
+              ports:
+                - "8000:8000"
+              depends_on:
+                - postgres
+              environment:
+                DATABASE_URL: postgresql://admin:saisab@postgres:5432/rust_sqlx?schema=public
+              networks:
+                - app_network_prod
+
+            frontend:
+              image: $REPO/frontend:$VERSION
+              container_name: nextjs_frontend_prod
+              ports:
+                - "3000:3000"
+              environment:
+                API_URL: http://backend:8000
+                NODE_ENV: production
+              restart: always
+              depends_on:
+                - backend
+              networks:
+                - app_network_prod
+
+          networks:
+            app_network_prod:
+              driver: bridge
+
+          volumes:
+            progresDB:
+          EOL
+
+          # Push the compose file to GHCR
+          tar -czf stack.tar.gz docker-compose.prod.yml .env
+          docker buildx build --push \
+            --tag $REPO/stack:$VERSION \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --platform linux/amd64 \
+            --file - . << EOF
+          FROM scratch
+          COPY stack.tar.gz /
+          EOF
+
+      - name: Generate stack attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/stack
+          subject-digest: sha256:${{ steps.push.outputs.digest }}
+          push-to-registry: true
