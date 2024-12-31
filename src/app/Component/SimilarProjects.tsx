@@ -58,6 +58,7 @@ export default async function SimilarProjects({
               href={`/projects/${project.id}`}
               key={project.id}
               className="flex py-3 w-60 items-center gap-2 h-24 hover:text-[#1A80E5] group"
+              data-testid="similar-projects"
             >
               <div className="w-3/6 h-full">
                 <Image

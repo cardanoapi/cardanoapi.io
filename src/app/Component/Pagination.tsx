@@ -63,6 +63,7 @@ export default function Pagination({
         {totalPages > 1 && (
           <>
             <button
+              data-testid="previous-button"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
               className={`px-4 py-2 mx-2 border rounded-full bg-[#D9D9D9] ${
@@ -75,6 +76,7 @@ export default function Pagination({
             {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, index) => (
               <button
+                data-testid="next-button"
                 key={index}
                 onClick={() => handlePageChange(index + 1)}
                 className={`px-4 py-2 mx-2 border rounded-full ${
