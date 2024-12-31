@@ -146,9 +146,9 @@ jobs:
           COPY stack.tar.gz /
           EOF
 
-      - name: Generate stack attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/stack
-          subject-digest: sha256:${{ steps.push.outputs.digest }}
-          push-to-registry: true
+    #   - name: Generate stack attestation
+    #     uses: actions/attest-build-provenance@v1
+    #     with:
+    #       subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/stack
+    #       subject-digest: sha256:${{ steps.push.outputs.digest }}
+    #       push-to-registry: true
