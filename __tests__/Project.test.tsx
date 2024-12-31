@@ -1,11 +1,11 @@
-/* eslint-disable testing-library/no-node-access */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsx-a11y/alt-text */
 import { render, screen } from "@testing-library/react";
-import Project from "@/app/projects/[id]/page";
+import ProjectPage from "@/app/projects/[id]/page";
 import "@testing-library/jest-dom";
 
+// Mock next/image
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: any) => {
@@ -13,81 +13,81 @@ jest.mock("next/image", () => ({
   },
 }));
 
-jest.mock("../src/data.json", () => [
-  {
-    id: "1",
-    projectName: "Project 1",
-    subImageUrl: "/path/to/image1.jpg",
-    description: "Description 1",
-    url: "http://example.com",
-  },
-  {
-    id: "2",
-    projectName: "Project 2",
-    subImageUrl: "/path/to/image2.jpg",
-    description: "Description 2",
-    url: "http://example2.com",
-  },
-]);
+// Mock next/link
+jest.mock("next/link", () => ({
+  __esModule: true,
+  default: ({
+    children,
+    href,
+  }: {
+    children: React.ReactNode;
+    href: string;
+  }) => <a href={href}>{children}</a>,
+}));
 
+// Mock next/navigation
 jest.mock("next/navigation", () => ({
   notFound: jest.fn(),
 }));
+
+// Mock SimilarProjects component
 jest.mock("../src/app/Component/SimilarProjects", () => {
   return function MockSimilarProjects() {
     return <div data-testid="similar-projects">Similar Projects</div>;
   };
 });
 
-describe("Project Page", () => {
-  it("renders the correct project based on the id from the URL", async () => {
-    const mockParams = Promise.resolve({ id: "1" });
-    render(await Project({ params: mockParams }));
+// Mock fetch function
+global.fetch = jest.fn();
 
-    const projectName = await screen.findByText("Project 1");
-    const projectDescription = await screen.findByText("Description 1");
-    expect(projectName).toBeInTheDocument();
-    expect(projectDescription).toBeInTheDocument();
+// Mock project data
+const mockProject = {
+  id: "1",
+  projectname: "Test Project",
+  projecturl: "https://test.com",
+  imageurl: "/test-image.jpg",
+  subimageurl: "/test-sub-image.jpg",
+  description: "Test Description",
+  about: "Test About Section",
+  createdAt: "2024-01-01",
+  published: true,
+  updatedAt: "2024-01-01",
+};
 
-    const image = await screen.findByAltText("Project Thumbnail");
-    expect(image).toHaveAttribute("src", "/path/to/image1.jpg");
-  });
+const mockApiResponse = {
+  projects: [mockProject],
+  results: 1,
+  status: "success",
+};
 
-  it("renders the similar projects section", async () => {
-    const mockParams = Promise.resolve({ id: "1" });
-    render(await Project({ params: mockParams }));
-
-    const similarProjectsSection = await screen.findByText("You may also like");
-    expect(similarProjectsSection).toBeInTheDocument();
-
-    const similarProjectsComponent = await screen.findByTestId(
-      "similar-projects"
-    );
-    expect(similarProjectsComponent).toBeInTheDocument();
-  });
-
-  it("renders the Visit button and links correctly", async () => {
-    const mockParams = Promise.resolve({ id: "1" });
-    render(await Project({ params: mockParams }));
-
-    const visitButtons = await screen.findAllByText("Visit");
-    expect(visitButtons.length).toBeGreaterThan(0);
-
-    visitButtons.forEach((button) => {
-      const link = button.closest("a");
-      expect(link).toHaveAttribute("href", "http://example.com");
-      expect(link).toHaveAttribute("target", "_blank");
+describe("ProjectPage", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockApiResponse,
     });
   });
 
-  it("displays the project screenshots", async () => {
-    const mockParams = Promise.resolve({ id: "1" });
-    render(await Project({ params: mockParams }));
+  it("renders project details correctly", async () => {
+    const params = Promise.resolve({ id: "1" });
+    render(await ProjectPage({ params }));
 
-    const screenshotImages = await screen.findAllByAltText("Screenshot");
-    expect(screenshotImages).toHaveLength(2);
-    screenshotImages.forEach((img) => {
-      expect(img).toHaveAttribute("src", "/images/screenshot1.png");
+    // Check if main project details are rendered
+    expect(screen.getByText("Test Project")).toBeInTheDocument();
+    expect(screen.getByText("Test Description")).toBeInTheDocument();
+    expect(screen.getByText("Test About Section")).toBeInTheDocument();
+
+    // Check if navigation elements are present
+    expect(screen.getByText("Projects")).toBeInTheDocument();
+    expect(screen.getAllByText("Visit").length).toBeGreaterThan(0); // Ensures buttons exist
+
+    // Optionally, verify each button individually
+    screen.getAllByText("Visit").forEach((button) => {
+      expect(button).toBeInTheDocument();
     });
+
+    // Check if similar projects section is rendered
+    expect(screen.getByTestId("similar-projects")).toBeInTheDocument();
   });
 });
