@@ -19,6 +19,20 @@ pub struct AppState {
     db: Pool<Postgres>,
 }
 
+
+
+use sqlx::migrate::Migrator;
+use std::path::Path;
+
+async fn run_migrations(pool: &sqlx::PgPool) -> Result<(), sqlx::Error> {
+    println!("Running database migrations...");
+    sqlx::migrate!("./migrations")
+        .run(pool)
+        .await?;
+    println!("Migrations completed successfully!");
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
     dotenv().ok();

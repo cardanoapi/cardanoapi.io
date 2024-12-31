@@ -16,12 +16,8 @@ RUN cargo build --release
 COPY . .
 COPY .sqlx .
 
-
-RUN sqlx migrate run
 # Enable offline mode for SQLx
 ENV SQLX_OFFLINE=true
-
-
 
 # Build the final binary
 RUN cargo build --release
@@ -36,6 +32,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# Copy the migrations folder to the runtime stage
+COPY --from=builder /app/migrations ./migrations
 
 # Copy the binary
 COPY --from=builder /app/target/release/api .

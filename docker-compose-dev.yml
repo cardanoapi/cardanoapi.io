@@ -22,16 +22,19 @@ services:
       - app_network_prod
 
   backend:
-    image: api-api:latest
+    build:
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: cardanoapiio_backend
     ports:
-      - "8000:8000" # Expose backend API on host port 8000
+      - "8000:8000"
     depends_on:
-      - postgres # Ensure backend starts after postgres is up
+      - postgres
     environment:
-      # Use the service name 'postgres' to refer to the database container internally
+      # Use the service name 'postgres' instead of localhost
       DATABASE_URL: postgresql://admin:saisab@postgres:5432/rust_sqlx?schema=public
     volumes:
-      - ./backend/api/src:/app/src:ro # Mount source code to the container for easy updates
+      - .backend/api/src:/app/src:ro
     networks:
       - app_network_prod
 
@@ -44,7 +47,8 @@ services:
       - "3000:3000" # Expose frontend on host port 3000
     environment:
       # The frontend needs to know where the API is hosted
-      NEXT_PUBLIC_API_URL: http://backend:8000 # Use 'backend' as the service name for internal communication
+      API_URL: http://backend:8000 # Use 'backend' as the service name for internal communication
+
       NODE_ENV: production # Set NODE_ENV to production in the frontend container
     restart: always # Automatically restart frontend on failure
     depends_on:
