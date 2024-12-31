@@ -1,12 +1,10 @@
 name: Create and publish Docker Compose stack to GHCR
 
 on:
-  push:
-    branches:
-      - ghcr_push_try
-  pull_request:
-    branches:
-      - ghcr_push_try
+  workflow_run:
+    workflows: ["Run Tests"]
+    types:
+      - completed
 
 env:
   REGISTRY: ghcr.io
@@ -47,41 +45,32 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
+      # Build and push backend
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ steps.get_version_info.outputs.version }}
+          context: ./backend/api
+          file: ./backend/api/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:${{ steps.get_version_info.outputs.version }}
 
-      # Build and push the entire stack
-      - name: Build and push Docker Compose stack
+      # Build and push frontend
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ steps.get_version_info.outputs.version }}
+
+      # Create and push the stack configuration
+      - name: Create and push stack configuration
         env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
+          VERSION: ${{ steps.get_version_info.outputs.version }}
+          REPO: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         run: |
-          VERSION=${{ steps.get_version_info.outputs.version }}
-          REPO=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-          # Build images with proper tags using the existing docker-compose-dev.yml
-          docker compose -f docker-compose-dev.yml build \
-            --build-arg VERSION=$VERSION \
-            --build-arg REPO=$REPO
-
-          # Get the service names from docker-compose
-          docker compose -f docker-compose-dev.yml config --services
-
-          # Tag images
-          docker tag cardanoapiio_backend:latest $REPO/backend:$VERSION
-          docker tag nextjs_frontend_prod:latest $REPO/frontend:$VERSION
-
-          # Push images
-          docker push $REPO/backend:$VERSION
-          docker push $REPO/frontend:$VERSION
-
           # Create production docker-compose file
-          cat > docker-compose-dev.prod.yml << EOL
+          cat > docker-compose.prod.yml << EOL
           services:
             postgres:
               image: postgres:latest
@@ -143,7 +132,7 @@ jobs:
           touch .env
 
           # Package and push the stack
-          tar -czf stack.tar.gz docker-compose-dev.prod.yml .env
+          tar -czf stack.tar.gz docker-compose.prod.yml .env
 
           # Create and push the stack image
           docker buildx build --push \
