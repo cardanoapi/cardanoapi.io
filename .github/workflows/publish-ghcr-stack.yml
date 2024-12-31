@@ -3,10 +3,10 @@ name: Create and publish Docker Compose stack to GHCR
 on:
   push:
     branches:
-      - backend
+      - ghcr_push_try
   pull_request:
     branches:
-      - backend
+      - ghcr_push_try
 
 env:
   REGISTRY: ghcr.io
@@ -61,24 +61,26 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |
-          # Update the docker-compose.yml to use GHCR images
           VERSION=${{ steps.get_version_info.outputs.version }}
           REPO=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-          # Build images with proper tags
-          docker compose build \
+          # Build images with proper tags using the existing docker-compose.yml
+          docker compose -f docker-compose.yml build \
             --build-arg VERSION=$VERSION \
             --build-arg REPO=$REPO
 
+          # Get the service names from docker-compose
+          docker compose -f docker-compose.yml config --services
+
           # Tag images
-          docker tag cardanoapiio_backend $REPO/backend:$VERSION
-          docker tag nextjs_frontend_prod $REPO/frontend:$VERSION
+          docker tag cardanoapiio_backend:latest $REPO/backend:$VERSION
+          docker tag nextjs_frontend_prod:latest $REPO/frontend:$VERSION
 
           # Push images
           docker push $REPO/backend:$VERSION
           docker push $REPO/frontend:$VERSION
 
-          # Create and push a docker-compose.yml with updated image references
+          # Create production docker-compose file
           cat > docker-compose.prod.yml << EOL
           services:
             postgres:
@@ -137,8 +139,13 @@ jobs:
             progresDB:
           EOL
 
-          # Push the compose file to GHCR
+          # Create a dummy .env file if it doesn't exist
+          touch .env
+
+          # Package and push the stack
           tar -czf stack.tar.gz docker-compose.prod.yml .env
+
+          # Create and push the stack image
           docker buildx build --push \
             --tag $REPO/stack:$VERSION \
             --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
