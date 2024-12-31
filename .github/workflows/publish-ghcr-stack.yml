@@ -1,10 +1,12 @@
 name: Create and publish Docker Compose stack to GHCR
 
 on:
-  workflow_run:
-    workflows: ["Run Tests"]
-    types:
-      - completed
+  push:
+    branches:
+      - ghcr_push_try
+  pull_request:
+    branches:
+      - ghcr_push_try
 
 env:
   REGISTRY: ghcr.io
