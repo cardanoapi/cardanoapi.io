@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the migrations folder to the runtime stage
-COPY --from=builder /app/migrations ./migrations
+# COPY --from=builder /app/migrations ./migrations
 
 # Copy the binary
 COPY --from=builder /app/target/release/api .

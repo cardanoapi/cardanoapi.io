@@ -37,6 +37,7 @@ async fn run_migrations(pool: &sqlx::PgPool) -> Result<(), sqlx::Error> {
 async fn main() {
     dotenv().ok();
 
+
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = match PgPoolOptions::new()
         .max_connections(10)
@@ -52,7 +53,7 @@ async fn main() {
             std::process::exit(1);
         }
     };
-
+    
     let cors = CorsLayer::new()
         .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
         .allow_methods([Method::GET, Method::POST, Method::PATCH, Method::DELETE])
