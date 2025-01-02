@@ -1,4 +1,4 @@
-name: Create and publish Docker Compose stack to GHCR
+name: Create and publish Docker Compose stack to ghcr
 
 on:
   push:
@@ -10,10 +10,11 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  BACKEND_IMAGE_NAME: ${{ github.repository }}-backend
+  FRONTEND_IMAGE_NAME: ${{ github.repository }}-frontend
 
 jobs:
-  build-and-push-stack:
+  build-and-push-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,128 +28,72 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get version info
+      - name: Get latest tag and commit distance
         id: get_version_info
         run: |
+          # Get the latest tag
           LATEST_TAG=$(git describe --tags --abbrev=0)
+
+          # Remove 'v' prefix from latest tag
           BASE_VERSION=${LATEST_TAG#v}
+
+          # Get the number of commits since the last tag
           COMMIT_DISTANCE=$(git rev-list --count ${LATEST_TAG}..HEAD)
-          NEW_VERSION="v${BASE_VERSION}.${COMMIT_DISTANCE}"
+
+          # Construct new version with build number
+          NEW_VERSION="${BASE_VERSION}.${COMMIT_DISTANCE}"
+
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           echo "Generated version: ${NEW_VERSION}"
 
-      - name: Log in to GHCR
+      - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # Build and push backend image
+      - name: Extract metadata for Backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.get_version_info.outputs.version }}
+            type=raw,value=latest
 
-      # Build and push backend
-      - name: Build and push backend
+      - name: Build and push Backend image
+        id: push-backend
         uses: docker/build-push-action@v5
         with:
           context: ./backend/api
           file: ./backend/api/Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:${{ steps.get_version_info.outputs.version }}
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          build-args: |
+            DATABASE_URL=postgresql://admin:saisab@postgres:5432/rust_sqlx?schema=public
 
-      # Build and push frontend
-      - name: Build and push frontend
+      # Build and push frontend image
+      - name: Extract metadata for Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ steps.get_version_info.outputs.version }}
+            type=raw,value=latest
+
+      - name: Build and push Frontend image
+        id: push-frontend
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ steps.get_version_info.outputs.version }}
-
-      # Create and push the stack configuration
-      - name: Create and push stack configuration
-        env:
-          VERSION: ${{ steps.get_version_info.outputs.version }}
-          REPO: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        run: |
-          # Create production docker-compose file
-          cat > docker-compose.prod.yml << EOL
-          services:
-            postgres:
-              image: postgres:latest
-              container_name: postgres_prod
-              ports:
-                - "6500:5432"
-              volumes:
-                - progresDB:/var/lib/postgresql/data
-              env_file:
-                - ./.env
-              networks:
-                - app_network_prod
-
-            pgAdmin:
-              image: dpage/pgadmin4
-              container_name: pgAdmin_prod
-              env_file:
-                - ./.env
-              ports:
-                - "5050:80"
-              networks:
-                - app_network_prod
-
-            backend:
-              image: $REPO/backend:$VERSION
-              container_name: cardanoapiio_backend
-              ports:
-                - "8000:8000"
-              depends_on:
-                - postgres
-              environment:
-                DATABASE_URL: postgresql://admin:saisab@postgres:5432/rust_sqlx?schema=public
-              networks:
-                - app_network_prod
-
-            frontend:
-              image: $REPO/frontend:$VERSION
-              container_name: nextjs_frontend_prod
-              ports:
-                - "3000:3000"
-              environment:
-                API_URL: http://backend:8000
-                NODE_ENV: production
-              restart: always
-              depends_on:
-                - backend
-              networks:
-                - app_network_prod
-
-          networks:
-            app_network_prod:
-              driver: bridge
-
-          volumes:
-            progresDB:
-          EOL
-
-          # Create a dummy .env file if it doesn't exist
-          touch .env
-
-          # Package and push the stack
-          tar -czf stack.tar.gz docker-compose.prod.yml .env
-
-          # Create and push the stack image
-          docker buildx build --push \
-            --tag $REPO/stack:$VERSION \
-            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
-            --platform linux/amd64 \
-            --file - . << EOF
-          FROM scratch
-          COPY stack.tar.gz /
-          EOF
-
-    #   - name: Generate stack attestation
-    #     uses: actions/attest-build-provenance@v1
-    #     with:
-    #       subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/stack
-    #       subject-digest: sha256:${{ steps.push.outputs.digest }}
-    #       push-to-registry: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          build-args: |
+            API_URL=http://backend:8000
+            NODE_ENV=production
