@@ -6,15 +6,12 @@ WORKDIR /app
 # Copy Cargo files
 COPY Cargo.toml Cargo.lock ./
 
-# Create dummy main.rs for caching (optional)
-RUN mkdir -p src && echo "fn main() {}" > src/main.rs
+# Fetch dependencies without building the app
+RUN cargo fetch
 
-# Build dependencies
-RUN cargo build --release
-
-# Copy source code and sqlx metadata
+# Copy the source code and SQLx metadata
 COPY . .
-COPY .sqlx .
+COPY .sqlx .  
 
 # Enable offline mode for SQLx
 ENV SQLX_OFFLINE=true
@@ -34,7 +31,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the migrations folder to the runtime stage
-# COPY --from=builder /app/migrations ./migrations
+COPY --from=builder /app/migrations ./migrations
 
 # Copy the binary
 COPY --from=builder /app/target/release/api .
