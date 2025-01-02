@@ -19,6 +19,7 @@ ENV SQLX_OFFLINE=true
 # Build the final binary
 RUN cargo build --release
 
+
 # Runtime Stage
 FROM ubuntu:22.04
 
@@ -32,6 +33,8 @@ WORKDIR /app
 
 # Copy the migrations folder to the runtime stage
 COPY --from=builder /app/migrations ./migrations
+
+
 
 # Copy the binary
 COPY --from=builder /app/target/release/api .

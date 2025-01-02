@@ -53,6 +53,10 @@ async fn main() {
             std::process::exit(1);
         }
     };
+    if let Err(err) = run_migrations(&pool).await {
+        println!("🔥 Failed to run migrations: {:?}", err);
+        std::process::exit(1);
+    }
     
     let cors = CorsLayer::new()
         .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
