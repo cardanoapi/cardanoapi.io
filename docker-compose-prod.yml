@@ -1,7 +1,61 @@
-version: "3"
 services:
-  nextjs:
-    image: saisab/cardanoapiio-app:latest
+  postgres:
+    image: postgres:latest
+    container_name: postgres_prod
     ports:
-      - "3000:3000"
-    restart: always
+      - "6500:5432" # Map host port 6500 to container's port 5432
+    volumes:
+      - progresDB:/var/lib/postgresql/data # Persistent data volume
+    env_file:
+      - ./.env # Make sure the .env file contains necessary database credentials
+    networks:
+      - app_network_prod
+
+  pgAdmin:
+    image: dpage/pgadmin4
+    container_name: pgAdmin_prod
+    env_file:
+      - ./.env # Use the same .env file to configure pgAdmin
+    ports:
+      - "5050:80" # Expose pgAdmin UI on host port 5050
+    networks:
+      - app_network_prod
+
+  backend:
+    image: saisab/cardanoapiio-backend:latest
+    ports:
+      - "8000:8000" # Expose backend API on host port 8000
+    depends_on:
+      - postgres # Ensure backend starts after postgres is up
+    environment:
+      # Use the service name 'postgres' to refer to the database container internally
+      DATABASE_URL: postgresql://admin:saisab@postgres:5432/rust_sqlx?schema=public
+    volumes:
+      - ./backend/api/src:/app/src:ro # Mount source code to the container for easy updates
+    networks:
+      - app_network_prod
+
+  frontend:
+    build:
+      context: . # Root context for frontend (Next.js app)
+      dockerfile: Dockerfile # Dockerfile location for frontend
+    container_name: nextjs_frontend_prod
+    ports:
+      - "3000:3000" # Expose frontend on host port 3000
+    environment:
+      # The frontend needs to know where the API is hosted
+      API_URL: http://backend:8000 # Use 'backend' as the service name for internal communication
+
+      NODE_ENV: production # Set NODE_ENV to production in the frontend container
+    restart: always # Automatically restart frontend on failure
+    depends_on:
+      - backend # Ensure frontend starts after backend is up
+    networks:
+      - app_network_prod
+
+networks:
+  app_network_prod:
+    driver: bridge # Use the bridge network for communication between containers
+
+volumes:
+  progresDB:

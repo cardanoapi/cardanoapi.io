@@ -1,0 +1,84 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE projects \n        SET projectname = $1,\n            projecturl = $2,\n            imageurl = $3,\n            subimageurl = $4,\n            description = $5,\n            about = $6,\n            published = $7,\n            updated_at = $8 \n        WHERE id = $9\n        RETURNING *\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "projectname",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "projecturl",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "imageurl",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "subimageurl",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "description",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "about",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "published",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 9,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Bool",
+        "Timestamptz",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "d168469a496ffe016d418b774b7b522532d17e64e54b07ddb61fbe1d83073368"
+}

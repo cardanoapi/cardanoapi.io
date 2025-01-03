@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import data from "../data.json";
-import Pagination from "./Component/Pagination"; // New client component
+import Pagination from "./Component/Pagination";
 
 export const metadata: Metadata = {
   title: "Cardano API",
@@ -21,14 +20,62 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+interface Project {
+  id: string;
+  projectname: string;
+  projecturl: string;
+  imageurl: string;
+  subimageurl: string;
+  description: string;
+  about: string;
+  createdAt: string;
+  published: boolean | null;
+  updatedAt: string;
+}
+
+interface ApiResponse {
+  projects: Project[];
+  results: number;
+  status: string;
+}
+
+async function getProjects(): Promise<Project[]> {
+  try {
+    const response = await fetch(`${process.env.API_URL}/api/projects`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch projects!");
+    }
+
+    const data: ApiResponse = await response.json();
+    return data.projects || [];
+  } catch (error) {
+    console.error("Error fetching projects: ", error, process.env.API_URL);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const projects = await getProjects();
   const cardsPerPage = 8;
-  const totalPages = Math.ceil(data.length / cardsPerPage);
+  const totalPages = Math.max(1, Math.ceil(projects.length / cardsPerPage));
+
+  // Map the API data structure to match what the Pagination component expects
+  const mappedProjects = projects.map((project) => ({
+    id: project.id,
+    projectName: project.projectname,
+    url: project.projecturl,
+    imageUrl: project.imageurl,
+    subImageUrl: project.subimageurl,
+    description: project.description,
+  }));
 
   return (
     <div className="sm:px-44 py-4 sm:py-8 flex flex-col min-h-screen">
       <Pagination
-        data={data}
+        data={mappedProjects}
         cardsPerPage={cardsPerPage}
         totalPages={totalPages}
       />

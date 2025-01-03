@@ -1,12 +1,48 @@
 import Image from "next/image";
-import data from "../../../data.json";
 import SimilarProjects from "@/app/Component/SimilarProjects";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+interface Project {
+  id: string;
+  projectname: string;
+  projecturl: string;
+  imageurl: string;
+  subimageurl: string;
+  description: string;
+  about: string;
+  createdAt: string;
+  published: boolean | null;
+  updatedAt: string;
+}
+
+interface ApiResponse {
+  projects: Project[];
+  results: number;
+  status: string;
+}
+
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+async function getProject(id: string): Promise<Project | null> {
+  try {
+    const response = await fetch(`${process.env.API_URL}/api/projects`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch projects!");
+    }
+
+    const data: ApiResponse = await response.json();
+    return data.projects.find((project) => project.id === id) || null;
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return null;
+  }
+}
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
@@ -14,20 +50,20 @@ export async function generateMetadata({ params }: Props) {
     return {};
   }
 
-  const project = data.find((project) => project.id === id);
+  const project = await getProject(id);
 
   if (!project) {
     return {};
   }
 
-  const projectName = project.projectName || "Cardano API";
+  const projectName = project.projectname || "Cardano API";
   const projectDescription =
     project.description || "A List of Cardano API Projects";
 
   return {
     title: projectName,
     description: projectDescription,
-    metadataBase: new URL('https://cardanoapi.io'),
+    metadataBase: new URL("https://cardanoapi.io"),
     openGraph: {
       title: projectName,
       description: projectDescription,
@@ -45,18 +81,13 @@ export async function generateMetadata({ params }: Props) {
 }
 
 const ProjectPage = async ({ params }: Props) => {
-  // Ensure `params` has an id
-
   const { id } = await params;
-  console.log(id);
   if (!id) {
     return <div>Project not found!</div>;
   }
 
-  // Fetch the project data based on the `id` parameter
-  const project = data.find((project) => project.id === id);
+  const project = await getProject(id);
 
-  // If project is not found, trigger a 404 page
   if (!project) {
     notFound();
   }
@@ -67,32 +98,32 @@ const ProjectPage = async ({ params }: Props) => {
         <Link href="/" className="text-[#1A80E5]">
           Projects
         </Link>{" "}
-        / {project?.projectName}
+        / {project.projectname}
       </div>
       <div className="py-4 flex flex-col">
         <div className="flex h-24 sm:h-32">
           <Image
             className="max-h-full rounded-xl sm:size-56 sm:border border-gray-200 object-contain"
-            src={project?.subImageUrl || ""}
+            src={project.subimageurl || ""}
             alt="Project Thumbnail"
             width={100}
             height={100}
           />
           <div className="flex flex-col w-full max-h-full px-4 gap-2">
             <h1 className="font-bold text-base sm:text-2xl">
-              {project?.projectName}
+              {project.projectname}
             </h1>
             <p className="w-full font-normal text-sm text-[#6D7D8B]">
-              {project?.description}
+              {project.description}
             </p>
-            <Link href={project?.url || ""} target="_blank">
+            <Link href={project.projecturl || ""} target="_blank">
               <button className="hidden sm:block justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-1/6 py-1 border-2 border-[#1A80E5]">
                 Visit
               </button>
             </Link>
           </div>
         </div>
-        <Link href={project?.url || ""} target="_blank">
+        <Link href={project.projecturl || ""} target="_blank">
           <button className="sm:hidden justify-center rounded-lg text-white bg-[#1A80E5] hover:bg-white hover:text-[#1A80E5] w-full py-1 my-4 border-2 border-[#1A80E5]">
             Visit
           </button>
@@ -134,10 +165,7 @@ const ProjectPage = async ({ params }: Props) => {
           <div>
             <h2 className="font-bold text-xl">About this app →</h2>
             <p className="font-normal text-lg text-[#6D7D8B]">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
-              nobis cumque expedita necessitatibus consectetur accusantium ullam
-              explicabo non dolore voluptatem fasdlkfjsdaf dsfdsafaljfdas;df
-              fasdfsadf.
+              {project.about}
             </p>
           </div>
           <div className="py-4">
