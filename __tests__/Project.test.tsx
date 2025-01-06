@@ -1,8 +1,11 @@
+/* eslint-disable testing-library/no-node-access */
+/* eslint-disable testing-library/no-container */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen } from "@testing-library/react";
-import ProjectPage from "@/app/projects/[id]/page";
+import ProjectPage, { generateMetadata } from "../src/app/projects/[id]/page";
+
 import "@testing-library/jest-dom";
 
 // Mock next/image
@@ -37,9 +40,6 @@ jest.mock("../src/app/Component/SimilarProjects", () => {
   };
 });
 
-// Mock fetch function
-global.fetch = jest.fn();
-
 // Mock project data
 const mockProject = {
   id: "1",
@@ -60,10 +60,14 @@ const mockApiResponse = {
   status: "success",
 };
 
+// Properly set up the fetch mock
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
+
 describe("ProjectPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (global.fetch as jest.Mock).mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       json: async () => mockApiResponse,
     });
@@ -73,21 +77,102 @@ describe("ProjectPage", () => {
     const params = Promise.resolve({ id: "1" });
     render(await ProjectPage({ params }));
 
-    // Check if main project details are rendered
     expect(screen.getByText("Test Project")).toBeInTheDocument();
     expect(screen.getByText("Test Description")).toBeInTheDocument();
     expect(screen.getByText("Test About Section")).toBeInTheDocument();
-
-    // Check if navigation elements are present
     expect(screen.getByText("Projects")).toBeInTheDocument();
-    expect(screen.getAllByText("Visit").length).toBeGreaterThan(0); // Ensures buttons exist
+    expect(screen.getAllByText("Visit").length).toBe(2); // One for mobile, one for desktop
+    expect(screen.getByTestId("similar-projects")).toBeInTheDocument();
+  });
 
-    // Optionally, verify each button individually
-    screen.getAllByText("Visit").forEach((button) => {
-      expect(button).toBeInTheDocument();
+  it("handles missing project ID", async () => {
+    const params = Promise.resolve({ id: "" });
+    const { container } = render(await ProjectPage({ params }));
+
+    expect(container).toHaveTextContent("Project not found!");
+  });
+
+  it("renders mobile and desktop layouts correctly", async () => {
+    const params = Promise.resolve({ id: "1" });
+    const { container } = render(await ProjectPage({ params }));
+
+    const mobileButton = container.querySelector(".sm\\:hidden");
+    expect(mobileButton).toBeInTheDocument();
+
+    const desktopButton = container.querySelector(".hidden.sm\\:block");
+    expect(desktopButton).toBeInTheDocument();
+  });
+});
+
+describe("generateMetadata", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => mockApiResponse,
+    });
+  });
+
+  it("generates correct metadata for existing project", async () => {
+    const params = Promise.resolve({ id: "1" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata).toEqual({
+      title: "Test Project",
+      description: "Test Description",
+      metadataBase: new URL("https://cardanoapi.io"),
+      openGraph: {
+        title: "Test Project",
+        description: "Test Description",
+        images: [
+          {
+            url: `/api/og?title=${encodeURIComponent(
+              "Test Project"
+            )}&description=${encodeURIComponent("Test Description")}`,
+            width: 1200,
+            height: 630,
+          },
+        ],
+      },
+    });
+  });
+
+  it("returns empty metadata for missing ID", async () => {
+    const params = Promise.resolve({ id: "" });
+    const metadata = await generateMetadata({ params });
+    expect(metadata).toEqual({});
+  });
+
+  it("returns empty metadata for non-existent project", async () => {
+    const params = Promise.resolve({ id: "nonexistent" });
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ projects: [], results: 0, status: "success" }),
     });
 
-    // Check if similar projects section is rendered
-    expect(screen.getByTestId("similar-projects")).toBeInTheDocument();
+    const metadata = await generateMetadata({ params });
+    expect(metadata).toEqual({});
+  });
+
+  it("uses default values when project fields are missing", async () => {
+    const params = Promise.resolve({ id: "1" });
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        projects: [
+          {
+            ...mockProject,
+            projectname: undefined,
+            description: undefined,
+          },
+        ],
+        results: 1,
+        status: "success",
+      }),
+    });
+
+    const metadata = await generateMetadata({ params });
+    expect(metadata.title).toBe("Cardano API");
+    expect(metadata.description).toBe("A List of Cardano API Projects");
   });
 });
