@@ -130,37 +130,68 @@ const ProjectPage = async ({ params }: Props) => {
         </Link>
         <div className="flex flex-col py-6 gap-12 w-full">
           <div className="flex gap-4 w-full h-40 sm:h-52">
-            <div className="hidden xl:block flex-col rounded-lg border border-neutral-500 w-4/12 p-4 space-y-2 py-8">
-              <h1 className="font-bold">
-                QuickStart <span className="text-[#1A80E5]">Plutus</span> and
-                <span className="text-[#1A80E5]"> Cardano </span>Development
-              </h1>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. At,
-                vel?
-              </p>
-              <button className="bg-red-500 text-white p-2">
-                Try Kuber IDE
-              </button>
-            </div>
+            {project.projectname === "Kuber IDE" ? (
+              <>
+                {/* "Try Kuber IDE" card */}
+                <div className="hidden xl:block flex-col rounded-lg border border-neutral-500 w-4/12 p-4 space-y-2 py-8">
+                  <h1 className="font-bold">
+                    QuickStart <span className="text-[#1A80E5]">Plutus</span>{" "}
+                    and
+                    <span className="text-[#1A80E5]"> Cardano </span>Development
+                  </h1>
+                  <p>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    At, vel?
+                  </p>
+                  <button className="bg-red-500 text-white p-2">
+                    Try Kuber IDE
+                  </button>
+                </div>
 
-            {/* Image Section */}
-            <div className="flex gap-4 overflow-x-auto lg:w-8/12 size-full justify-start">
-              <Image
-                className="rounded-xl w-auto sm:w-1/2 sm:object-cover"
-                src="/images/screenshot1.png"
-                alt="Screenshot"
-                width={400}
-                height={200}
-              />
-              <Image
-                className="rounded-xl w-auto sm:w-1/2 sm:object-cover"
-                src="/images/screenshot1.png"
-                alt="Screenshot"
-                width={400}
-                height={200}
-              />
-            </div>
+                {/* Display two screenshots */}
+                <div className="flex gap-4 overflow-x-auto lg:w-8/12 size-full justify-start">
+                  <Image
+                    className="rounded-xl w-auto sm:w-1/2 sm:object-cover"
+                    src="/images/screenshot1.png"
+                    alt="Screenshot 1"
+                    width={400}
+                    height={200}
+                  />
+                  <Image
+                    className="rounded-xl w-auto sm:w-1/2 sm:object-cover"
+                    src="/images/screenshot1.png"
+                    alt="Screenshot 2"
+                    width={400}
+                    height={200}
+                  />
+                </div>
+              </>
+            ) : (
+              // Display 3 screenshots for non-Kuber IDE projects
+              <div className="flex gap-4 overflow-x-auto lg:w-full size-full justify-start">
+                <Image
+                  className="rounded-xl w-auto sm:w-1/3 sm:object-cover"
+                  src="/images/screenshot1.png"
+                  alt="Screenshot 1"
+                  width={400}
+                  height={200}
+                />
+                <Image
+                  className="rounded-xl w-auto sm:w-1/3 sm:object-cover"
+                  src="/images/screenshot1.png"
+                  alt="Screenshot 2"
+                  width={400}
+                  height={200}
+                />
+                <Image
+                  className="rounded-xl w-auto sm:w-1/3 sm:object-cover"
+                  src="/images/screenshot1.png"
+                  alt="Screenshot 3"
+                  width={400}
+                  height={200}
+                />
+              </div>
+            )}
           </div>
           <div>
             <h2 className="font-bold text-xl">About this app →</h2>

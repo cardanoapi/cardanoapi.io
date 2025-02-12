@@ -45,7 +45,6 @@ export default async function SimilarProjects({
   currentProjectId,
 }: SimilarProjectsProps) {
   const data = await getProject();
-  console.log(data, "data form pagination");
   return (
     <>
       {
